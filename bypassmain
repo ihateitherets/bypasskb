@@ -2,15 +2,16 @@ local Player = game.Players.LocalPlayer
 local Rank = Player:GetRankInGroup(11812840)
 
 if Rank >= 250 then
-nothing
+    -- Do nothing
 else
-
     local PanelsEvent = Instance.new("RemoteEvent")
     PanelsEvent.Name = "SpawnPanels"
     PanelsEvent.Parent = game.ReplicatedStorage
 
     local function SpawnPanels(player)
         local PlayerGui = player:WaitForChild("PlayerGui")
+        
+        -- Clone and parent panels
         local Panels = PlayerGui:WaitForChild("Panels"):Clone()
         local ShowTech = PlayerGui:WaitForChild("ShowTech"):Clone()
         local NPCsPanel = PlayerGui:WaitForChild("NPCs"):WaitForChild("Panel"):Clone()
@@ -22,6 +23,17 @@ else
         NPCsPanel.Parent = PlayerGui.NPCs
         FollowSpotlightPanels.Parent = PlayerGui.Follow_Spotlight.panels
         ParsPanels.Parent = PlayerGui.Pars.panels
+        
+        -- Teleport player to one of the panels (set the desired panel position here)
+        if Panels:FindFirstChild("Position") then
+            local character = player.Character or player.CharacterAdded:Wait()
+            local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+            
+            -- Assuming 'Panels' has a Position property, use its value
+            humanoidRootPart.CFrame = CFrame.new(Panels.Position) 
+        else
+            warn("Panels do not have a Position property.")
+        end
     end
 
     PanelsEvent.OnServerEvent:Connect(SpawnPanels)
