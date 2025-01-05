@@ -10,7 +10,7 @@ else
 
     local function SpawnPanels(player)
         local PlayerGui = player:WaitForChild("PlayerGui")
-        
+
         -- Clone and parent panels
         local Panels = PlayerGui:WaitForChild("Panels"):Clone()
         local ShowTech = PlayerGui:WaitForChild("ShowTech"):Clone()
@@ -23,7 +23,7 @@ else
         NPCsPanel.Parent = PlayerGui.NPCs
         FollowSpotlightPanels.Parent = PlayerGui.Follow_Spotlight.panels
         ParsPanels.Parent = PlayerGui.Pars.panels
-        
+
         -- Teleport player to one of the panels (set the desired panel position here)
         if Panels:FindFirstChild("Position") then
             local character = player.Character or player.CharacterAdded:Wait()
@@ -34,6 +34,37 @@ else
         else
             warn("Panels do not have a Position property.")
         end
+
+        -- Make the panels visible through walls
+        local function MakeVisibleThroughWalls(panel)
+            if panel:IsA("BasePart") then
+                panel.Transparency = 0.5 -- Adjust transparency (0 = fully opaque, 1 = fully transparent)
+                panel.Material = Enum.Material.Neon -- Use Neon to make it glow
+                panel.CanCollide = false -- Optional: make sure players can't collide with it
+
+                -- Add BillboardGui for better visibility
+                local billboard = Instance.new("BillboardGui")
+                billboard.Size = UDim2.new(4, 0, 4, 0) -- Size of the GUI
+                billboard.AlwaysOnTop = true -- Ensure visibility through walls
+                billboard.Parent = panel
+
+                local label = Instance.new("TextLabel")
+                label.Size = UDim2.new(1, 0, 1, 0)
+                label.Text = "Panel" -- Customize the text
+                label.TextColor3 = Color3.new(1, 1, 1) -- White text
+                label.BackgroundTransparency = 1 -- Make the background transparent
+                label.Font = Enum.Font.SourceSansBold -- Customize the font
+                label.TextScaled = true -- Scale the text
+                label.Parent = billboard
+            end
+        end
+
+        -- Apply visibility settings to all panels
+        MakeVisibleThroughWalls(Panels)
+        MakeVisibleThroughWalls(ShowTech)
+        MakeVisibleThroughWalls(NPCsPanel)
+        MakeVisibleThroughWalls(FollowSpotlightPanels)
+        MakeVisibleThroughWalls(ParsPanels)
     end
 
     PanelsEvent.OnServerEvent:Connect(SpawnPanels)
