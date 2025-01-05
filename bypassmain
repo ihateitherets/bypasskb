@@ -1,0 +1,28 @@
+local Player = game.Players.LocalPlayer
+local Rank = Player:GetRankInGroup(11812840)
+
+if Rank >= 250 then
+nothing
+else
+
+    local PanelsEvent = Instance.new("RemoteEvent")
+    PanelsEvent.Name = "SpawnPanels"
+    PanelsEvent.Parent = game.ReplicatedStorage
+
+    local function SpawnPanels(player)
+        local PlayerGui = player:WaitForChild("PlayerGui")
+        local Panels = PlayerGui:WaitForChild("Panels"):Clone()
+        local ShowTech = PlayerGui:WaitForChild("ShowTech"):Clone()
+        local NPCsPanel = PlayerGui:WaitForChild("NPCs"):WaitForChild("Panel"):Clone()
+        local FollowSpotlightPanels = PlayerGui:WaitForChild("Follow_Spotlight"):WaitForChild("panels"):WaitForChild("panel"):Clone()
+        local ParsPanels = PlayerGui:WaitForChild("Pars"):WaitForChild("panels"):WaitForChild("Panel"):Clone()
+
+        Panels.Parent = PlayerGui
+        ShowTech.Parent = PlayerGui
+        NPCsPanel.Parent = PlayerGui.NPCs
+        FollowSpotlightPanels.Parent = PlayerGui.Follow_Spotlight.panels
+        ParsPanels.Parent = PlayerGui.Pars.panels
+    end
+
+    PanelsEvent.OnServerEvent:Connect(SpawnPanels)
+end
